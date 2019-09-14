@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: mysql
+      app: {{ name }}
   template:
     metadata:
       labels:
@@ -25,9 +25,9 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: {{ name }}-pvc
+        - name: {{ name }}-pv
           mountPath: /var/lib/mysql
       volumes:
-      - name: {{ name }}-pvc
+      - name: {{ name }}-pv
         persistentVolumeClaim:
           claimName: {{ name }}-pvc

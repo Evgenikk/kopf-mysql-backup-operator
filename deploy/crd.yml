@@ -39,5 +39,3 @@ spec:
               type: string
             storage_size:
               type: string
-
-
