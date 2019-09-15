@@ -11,7 +11,9 @@ def wait_until_job_end(jobname):
         jobs = api.list_namespaced_job('default')
         for job in jobs.items:
             if job.metadata.name == jobname:
+                print(f"job with { jobname }  found,wait untill end")
                 if job.status.succeeded == 1:
+                    print(f"job with { jobname }  success")
                     break
         break
 
