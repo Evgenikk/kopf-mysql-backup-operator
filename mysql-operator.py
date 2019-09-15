@@ -1,6 +1,7 @@
 import kopf
 import yaml
 import kubernetes
+import time
 from kubernetes import client
 from jinja2 import Environment, FileSystemLoader
 
@@ -9,8 +10,9 @@ def wait_until_job_end(jobname):
     api = kubernetes.client.BatchV1Api()
     job_finished = False
     jobs = api.list_namespaced_job('default')
-    while (job_finished is not True) and \
+    while (not job_finished) and \
             any(job.metadata.name == jobname for job in jobs.items):
+        time.sleep(1)
         jobs = api.list_namespaced_job('default')
         for job in jobs.items:
             if job.metadata.name == jobname:
@@ -42,7 +44,7 @@ def render_template(filename, vars_dict):
     template = env.get_template(filename)
     yaml_manifest = template.render(vars_dict)
     json_manifest = yaml.load(yaml_manifest)
-    return(json_manifest)
+    return json_manifest
 
 
 @kopf.on.create('otus.homework', 'v1', 'mysqls')
