@@ -5,13 +5,15 @@ from kubernetes import client
 from jinja2 import Environment, FileSystemLoader
 
 
-# def wait_until_job_end(jobname):
-#     api = kubernetes.client.BatchV1Api()
-#     jobs = api.list_namespaced_job('default')
-#     for job in jobs.items:
-#         if job == jobname:
-#             while job.status.active == 1:
-#                 pass
+def wait_until_job_end(jobname):
+    api = kubernetes.client.BatchV1Api()
+    while True:
+        jobs = api.list_namespaced_job('default')
+        for job in jobs.items:
+            if job.metadata.name == jobname:
+                if job.status.succeeded == 1:
+                    break
+        break
 
 
 def delete_success_jobs(mysql_instance_name):
@@ -29,8 +31,6 @@ def delete_success_jobs(mysql_instance_name):
                 api.delete_namespaced_job(jobname,
                                           'default',
                                           propagation_policy='Background')
-
-                print("object must be deleted")
 
 
 def render_template(filename, vars_dict):
@@ -131,5 +131,5 @@ def delete_object_make_backup(body, **kwargs):
         'password': password,
         'database': database})
     api.create_namespaced_job('default', backup_job)
-    delete_success_jobs(name)
+    wait_until_job_end(f"backup-{name}-job")
     return {'message': "mysql and its children resources deleted"}
