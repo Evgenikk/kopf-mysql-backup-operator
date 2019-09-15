@@ -7,15 +7,17 @@ from jinja2 import Environment, FileSystemLoader
 
 def wait_until_job_end(jobname):
     api = kubernetes.client.BatchV1Api()
-    while True:
+    job_finished = False
+    jobs = api.list_namespaced_job('default')
+    while (job_finished is not True) and \
+            any(job.metadata.name == jobname for job in jobs.items):
         jobs = api.list_namespaced_job('default')
         for job in jobs.items:
             if job.metadata.name == jobname:
                 print(f"job with { jobname }  found,wait untill end")
                 if job.status.succeeded == 1:
                     print(f"job with { jobname }  success")
-                    break
-        break
+                    job_finished = True
 
 
 def delete_success_jobs(mysql_instance_name):
@@ -122,6 +124,8 @@ def delete_object_make_backup(body, **kwargs):
     image = body['spec']['image']
     password = body['spec']['password']
     database = body['spec']['database']
+
+    print(name)
 
     delete_success_jobs(name)
 

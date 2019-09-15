@@ -105,3 +105,11 @@ kubectl exec -it $MYSQLPOD -- mysql -potuspassword -e "INSERT INTO test ( id, na
 export MYSQLPOD=$(kubectl get pods -l app=mysql-instance -o jsonpath="{.items[*].metadata.name}")
 kubectl exec -it $MYSQLPOD -- mysql -potuspassword -e "select * from test;" otus-database
 ```
+
+
+```
+[2019-09-15 13:27:20,425] kopf.objects         [DEBUG   ] [default/mysql-instance] Resuming event: {'apiVersion': 'otus.homework/v1', 'kind': 'MySQL', 'metadata': {'annotations': {'kopf.zalando.org/last-handled-configuration': '{"spec": {"database": "otus-database", "image": "mysql:5.7", "password": "otuspassword", "storage_size": "1Gi"}}', 'kubectl.kubernetes.io/last-applied-configuration': '{"apiVersion":"otus.homework/v1","kind":"MySQL","metadata":{"annotations":{},"name":"mysql-instance","namespace":"default"},"spec":{"database":"otus-database","image":"mysql:5.7","password":"otuspassword","storage_size":"1Gi"}}\n'}, 'creationTimestamp': '2019-09-15T10:26:33Z', 'finalizers': ['kopf.zalando.org/KopfFinalizerMarker'], 'generation': 2, 'name': 'mysql-instance', 'namespace': 'default', 'resourceVersion': '143561', 'selfLink': '/apis/otus.homework/v1/namespaces/default/mysqls/mysql-instance', 'uid': '7600e0d5-b431-43d6-88ef-4dd29579118b'}, 'spec': {'database': 'otus-database', 'image': 'mysql:5.7', 'password': 'otuspassword', 'storage_size': '1Gi'}, 'status': {'kopf': {}}}
+[2019-09-15 13:27:20,426] kopf.objects         [DEBUG   ] [default/mysql-instance] Resuming diff: ()
+[2019-09-15 13:27:20,426] kopf.objects         [DEBUG   ] [default/mysql-instance] Patching with: {'metadata': {'annotations': {'kopf.zalando.org/last-handled-configuration': '{"spec": {"database": "otus-database", "image": "mysql:5.7", "password": "otuspassword", "storage_size": "1Gi"}}'}}}
+[2019-09-15 13:27:20,452] asyncio              [DEBUG   ] poll took 11.145 ms: 1 events
+```
