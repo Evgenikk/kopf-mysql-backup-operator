@@ -2,7 +2,6 @@ import kopf
 import yaml
 import kubernetes
 import time
-from kubernetes import client
 from jinja2 import Environment, FileSystemLoader
 
 
@@ -126,8 +125,6 @@ def delete_object_make_backup(body, **kwargs):
     image = body['spec']['image']
     password = body['spec']['password']
     database = body['spec']['database']
-
-    print(name)
 
     delete_success_jobs(name)
 
