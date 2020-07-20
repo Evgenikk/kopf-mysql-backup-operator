@@ -126,8 +126,6 @@ def delete_object_make_backup(body, **kwargs):
     password = body['spec']['password']
     database = body['spec']['database']
 
-    delete_success_jobs(name)
-
     # Cоздаем backup job:
     api = kubernetes.client.BatchV1Api()
     backup_job = render_template('backup-job.yml.j2', {
@@ -137,4 +135,5 @@ def delete_object_make_backup(body, **kwargs):
         'database': database})
     api.create_namespaced_job('default', backup_job)
     wait_until_job_end(f"backup-{name}-job")
+    delete_success_jobs(name)
     return {'message': "mysql and its children resources deleted"}
